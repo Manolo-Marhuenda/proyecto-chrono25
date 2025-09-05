@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from profiles.models import UserProfile
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -8,13 +9,16 @@ class RegistrationForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
     
-    def save(self):
-        user = super().save(commit=True)
+    def save(self, commit=True):
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data['password'])
-        user.save()
-
-        from profiles.models import UserProfile
-        UserProfile.objects.create(user=user)
+        
+        if commit:
+            user.save()
+            
+            # Utiliza get_or_create para evitar la duplicación del perfil
+            UserProfile.objects.get_or_create(user=user)
+        
         return user
     
 class LoginForm(forms.Form):
