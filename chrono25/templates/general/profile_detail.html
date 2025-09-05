@@ -6,8 +6,9 @@
 
 <div class="container">
     {% include '_includes/_menssages.html' %}
-    <h1>Contacto</h1>
-    <p>¡Bienvenido a Chrono25</p>
+    <h1>Mi Perfil</h1>
+
+    <p>¡Bienvenido a Chrono25 este es el perfil de {{request.user.username}}</p>
 </div>
 
 {% endblock %}

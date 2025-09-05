@@ -19,6 +19,7 @@ from django.urls import path
 
 from .views import HomeView, LoginView, RegisterView, ContactView, LegaltView
 from .views import logout_view
+from .views import ProfileDetailView
 
 
 urlpatterns = [
@@ -27,6 +28,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('contact/', ContactView.as_view(), name='contact'),
+    path('profile/<pk>', ProfileDetailView.as_view(), name='profile_detail'),
     path('legal/', LegaltView.as_view(), name='legal'),
     path('admin/', admin.site.urls),
 ]
