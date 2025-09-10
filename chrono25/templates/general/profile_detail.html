@@ -7,8 +7,12 @@
 <div class="container">
     {% include '_includes/_menssages.html' %}
     <h1>Mi Perfil</h1>
-
     <p>¡Bienvenido a Chrono25 este es el perfil de {{request.user.username}}</p>
+    <p>País: {{profile.pais}}</p>
+    <p>Fotografía: {{profile.profile_picture}}</p>
+
+    <p><a href="">Editar</a></p>
+
 </div>
 
 {% endblock %}

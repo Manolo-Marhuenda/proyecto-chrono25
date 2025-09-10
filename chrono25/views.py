@@ -62,6 +62,7 @@ class LegaltView(TemplateView):
 class ProfileDetailView(DetailView):
     template_name = 'general/profile_detail.html'
     model = UserProfile
+    context_object_name = 'profile'
 
 def logout_view(request):
     logout(request)
