@@ -11,7 +11,7 @@
     <h1>Mi Perfil</h1>
     <p>¡Bienvenido a Chrono25 este es el perfil de {{request.user.username}}</p>
     <p>País: {{profile.pais}}</p>
-    {% if UserProfile.profile_picture %}
+    {% if profile.profile_picture %}
         <p>Fotografía:</p><img src="{{profile.profile_picture.url}}" alt="Fotografía de perfil" width="200" height="200" style="border-radius: 50%;">
     {% else %}
         <p>No has subido una fotografía de perfil.</p>
