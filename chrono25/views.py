@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from profiles.models import UserProfile
 from .forms import RegistrationForm, LoginForm
 from django.views.generic.edit import FormView
-from django.views.generic import DetailView
+from django.views.generic import DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -63,6 +63,21 @@ class ProfileDetailView(DetailView):
     template_name = 'general/profile_detail.html'
     model = UserProfile
     context_object_name = 'profile'
+
+
+class ProfileUpdateView(UpdateView):
+    template_name = 'general/profile_update.html'
+    model = UserProfile
+    context_object_name = 'profile'
+    fields = ['pais', 'profile_picture']
+
+    def form_valid(self, form):
+        user = form.save()
+        messages.add_message(self.request, messages.SUCCESS, "Perfil actualizado correctamente.")
+        return super(ProfileUpdateView,self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('profile_detail', kwargs={'pk': self.object.pk})
 
 def logout_view(request):
     logout(request)

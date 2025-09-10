@@ -1,5 +1,7 @@
 {% extends 'general/layout.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block head_title %}Chrono25{% endblock %}
 
 {% block page_content %}
@@ -9,9 +11,9 @@
     <h1>Mi Perfil</h1>
     <p>¡Bienvenido a Chrono25 este es el perfil de {{request.user.username}}</p>
     <p>País: {{profile.pais}}</p>
-    <p>Fotografía: {{profile.profile_picture}}</p>
+    <p>Fotografía:</p><img src="{{profile.profile_picture.url}}" alt="Fotografía de perfil" width="200" height="200" style="border-radius: 50%;">
 
-    <p><a href="">Editar</a></p>
+    <p><a href="{% url 'profile_update' profile.pk %}">Editar</a></p>
 
 </div>
 

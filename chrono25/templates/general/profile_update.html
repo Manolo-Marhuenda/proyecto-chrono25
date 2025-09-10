@@ -1,0 +1,24 @@
+{% extends 'general/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block head_title %}Binvenido a Chrono25{% endblock %}
+
+{% block page_content %}
+
+<div class="container">
+    {% include '_includes/_menssages.html' %}
+    <h1>Editar mi perfil</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                {{form.pais|as_crispy_field}}
+                {{form.profile_picture|as_crispy_field}}
+            </div>
+        </div>
+        <button class="btn btn-secondary">Actualizar</button>
+    </form>
+</div>
+
+{% endblock %}
