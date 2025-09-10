@@ -1,4 +1,5 @@
 from django.db import models
+from djmoney.models.fields import MoneyField
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -9,7 +10,7 @@ class Reloj(models.Model):
     modelo = models.CharField(max_length=100) # Manual para en un futuro hacer un desplegable segun marca.
     image= models.ImageField(upload_to='reloj_images/', verbose_name='Imagen')
     description = models.TextField(verbose_name='Descripción')
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
