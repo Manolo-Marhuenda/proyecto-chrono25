@@ -1,0 +1,10 @@
+<article>
+    <div class="relojes-container">
+        <p><strong>Marca:</strong> {{ reloj.marca }}</p>
+        <p><strong>Precio:</strong>{{ reloj.price }}</p>
+        {% if reloj.image %}
+            <img src="{{ reloj.image.url }}" alt="{{ reloj.nombre }}" width="200">
+        {% endif %}
+        <p><strong>Vendedor:</strong>{{reloj.user}}</p>
+    </div>
+</article>

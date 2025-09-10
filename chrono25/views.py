@@ -7,16 +7,23 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from profiles.models import UserProfile
+from django.views.generic import ListView
+from reloj.models import Reloj
 from .forms import RegistrationForm, LoginForm
 from django.views.generic.edit import FormView
 from django.views.generic import DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 
 
-class HomeView(TemplateView):
+class HomeView(ListView):
     template_name = 'general/home.html'
+    model = Reloj
+    context_object_name = 'relojes' # Nombre para acceder a la lista en la plantilla
+    paginate_by = 10 # Número de elementos por página
 
 
 class LoginView(FormView):
@@ -59,12 +66,14 @@ class LegaltView(TemplateView):
     template_name = 'general/legal.html'
 
 
+@method_decorator(login_required, name='dispatch')
 class ProfileDetailView(DetailView):
     template_name = 'general/profile_detail.html'
     model = UserProfile
     context_object_name = 'profile'
 
 
+@method_decorator(login_required, name='dispatch')
 class ProfileUpdateView(UpdateView):
     template_name = 'general/profile_update.html'
     model = UserProfile

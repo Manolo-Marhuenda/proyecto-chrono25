@@ -1,5 +1,7 @@
 {% extends 'general/layout.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block head_title %}Chrono25{% endblock %}
 
 {% block page_content %}
@@ -8,6 +10,30 @@
     {% include '_includes/_menssages.html' %}
     <h1>Homepage</h1>
     <p>¡Bienvenido a Chrono25</p>
+    {% for reloj in page_obj %}
+    
+        {% include '_includes/reloj/_reloj.html' %}
+
+    {% endfor %}
+    
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">Primera</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 
 {% endblock %}
