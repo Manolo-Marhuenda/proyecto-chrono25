@@ -6,4 +6,4 @@ from profiles.models import UserProfile
 
 @admin.register(Reloj)
 class RelojAdmin(admin.ModelAdmin):
-    list_display = ("user","marca", "modelo","image", "price", "stock")
+    list_display = ("user","marca", "modelo","image", "price")

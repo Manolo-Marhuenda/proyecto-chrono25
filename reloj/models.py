@@ -8,9 +8,8 @@ class Reloj(models.Model):
     marca = models.CharField(max_length=100) # Manual para en un futuro hacer un desplegable.
     modelo = models.CharField(max_length=100) # Manual para en un futuro hacer un desplegable segun marca.
     image= models.ImageField(upload_to='reloj_images/', verbose_name='Imagen')
-    description = models.TextField()
+    description = models.TextField(verbose_name='Descripción')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

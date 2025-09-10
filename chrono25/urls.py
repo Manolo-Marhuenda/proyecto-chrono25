@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from .views import HomeView, LoginView, RegisterView, ContactView, LegaltView
 from .views import logout_view
 from .views import ProfileDetailView, ProfileUpdateView
+from reloj.views import RelojCreateView
 
 
 urlpatterns = [
@@ -32,6 +33,7 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'),
     path('profile/<pk>', ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/<pk>', ProfileUpdateView.as_view(), name='profile_update'),
+    path('reloj/create/', RelojCreateView.as_view(), name='reloj_create'),
     path('legal/', LegaltView.as_view(), name='legal'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
