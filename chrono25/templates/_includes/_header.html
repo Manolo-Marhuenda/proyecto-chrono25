@@ -12,6 +12,7 @@
                 {% if request.user.is_authenticated %}
                 <li><a href="{% url 'profile_detail' request.user.profile.pk %}">Mi perfil</a></li>
                 <li><a href="{% url 'reloj_create'  %}">Nuevo Reloj</a></li>
+                <li><a href="{% url 'ver_carrito_cbv' %}">Carrito</a></li>
                 <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
                 {% endif %}
             </ul>

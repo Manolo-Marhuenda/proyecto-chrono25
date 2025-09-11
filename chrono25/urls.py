@@ -22,7 +22,8 @@ from django.conf.urls.static import static
 from .views import HomeView, LoginView, RegisterView, ContactView, LegaltView
 from .views import logout_view
 from .views import ProfileDetailView, ProfileUpdateView
-from reloj.views import RelojCreateView
+from reloj.views import RelojCreateView, RelojDetailView
+from .views import AgregarAlCarritoView, CarritoView, EliminarDelCarritoView, CrearOrdenCompraView
 
 
 urlpatterns = [
@@ -34,6 +35,11 @@ urlpatterns = [
     path('profile/<pk>', ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/<pk>', ProfileUpdateView.as_view(), name='profile_update'),
     path('reloj/create/', RelojCreateView.as_view(), name='reloj_create'),
+    path('reloj/<pk>/', RelojDetailView.as_view(), name='reloj_detail'),
+    path('agregar/<int:reloj_id>/', AgregarAlCarritoView.as_view(), name='agregar_al_carrito'),
+    path('carrito/', CarritoView.as_view(), name='ver_carrito_cbv'),
+    path('carrito/eliminar/<int:reloj_id>/', EliminarDelCarritoView.as_view(), name='eliminar_del_carrito'),
+    path('ordenar/', CrearOrdenCompraView.as_view(), name='crear_orden_compra'),
     path('legal/', LegaltView.as_view(), name='legal'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

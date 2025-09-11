@@ -1,6 +1,7 @@
 from django.db import models
 from reloj.models import Reloj
 from order.models import OrdenDeCompra
+from django.contrib.auth.models import User
 
 # Create your models here.
 class ItemDeOrden(models.Model):

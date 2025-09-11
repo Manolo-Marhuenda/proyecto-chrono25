@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect, get_object_or_404
 
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
+from django.views import View
+from decimal import Decimal
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
@@ -15,6 +17,9 @@ from django.views.generic import DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from order.models import OrdenDeCompra
+from orderItem.models import ItemDeOrden
 
 
 
@@ -98,3 +103,85 @@ def logout_view(request):
     logout(request)
     messages.add_message(request, messages.INFO, 'Has cerrado sesión correctamente.')
     return HttpResponseRedirect(reverse_lazy('home'))
+
+
+class CarritoView(TemplateView):
+    template_name = 'carrito/ver_carrito_cbv.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        carrito = self.request.session.get('carrito', {})
+        items_carrito = []
+        total_carrito = Decimal('0.00')
+
+        for reloj_id, cantidad in carrito.items():
+            try:
+                reloj = get_object_or_404(Reloj, pk=reloj_id)
+                subtotal = reloj.precio * cantidad
+                total_carrito += subtotal
+                items_carrito.append({
+                    'reloj': reloj,
+                    'cantidad': cantidad,
+                    'subtotal': subtotal
+                })
+            except ValueError:
+                # Manejar el caso donde reloj_id no es un entero válido
+                continue
+
+        context['items_carrito'] = items_carrito
+        context['total_carrito'] = total_carrito
+        return context
+
+
+class AgregarAlCarritoView(View):
+    def post(self, request, reloj_id, *args, **kwargs):
+        reloj = get_object_or_404(Reloj, pk=reloj_id)
+        carrito = request.session.get('carrito', {})
+        
+        reloj_id_str = str(reloj.id)
+        if reloj_id_str in carrito:
+            carrito[reloj_id_str] += 1
+        else:
+            carrito[reloj_id_str] = 1
+        
+        request.session['carrito'] = carrito
+        return redirect('ver_carrito_cbv')
+
+
+
+class EliminarDelCarritoView(View):
+    def post(self, request, reloj_id, *args, **kwargs):
+        carrito = request.session.get('carrito', {})
+        reloj_id_str = str(reloj_id)
+        if reloj_id_str in carrito:
+            del carrito[reloj_id_str]
+            request.session['carrito'] = carrito
+        return redirect('ver_carrito_cbv')
+
+
+
+class CrearOrdenCompraView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        carrito = request.session.get('carrito', {})
+        if not carrito:
+            return redirect('ver_carrito_cbv')
+
+        # Crear la Orden de Compra
+        orden = OrdenDeCompra.objects.create(
+            cliente=request.user,
+            completada=True
+        )
+
+        # Crear los Ítems de la Orden
+        for reloj_id, cantidad in carrito.items():
+            reloj = get_object_or_404(Reloj, pk=reloj_id)
+            ItemDeOrden.objects.create(
+                orden=orden,
+                reloj=reloj,
+                cantidad=cantidad
+            )
+        
+        # Limpiar el carrito de la sesión
+        request.session['carrito'] = {}
+
+        return render(request, 'orden_creada.html', {'orden': orden})

@@ -1,5 +1,10 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView, CreateView
+from django.urls import reverse_lazy
+from django.contrib import messages
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -20,4 +25,4 @@ class Reloj(models.Model):
         verbose_name_plural = 'Relojes'
 
     def __str__(self):
-        return self.marca + ' ' + self.modelo
+        return self.marca + ' ' + self.modelo    

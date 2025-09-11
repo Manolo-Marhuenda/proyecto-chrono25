@@ -1,0 +1,31 @@
+{% extends 'general/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% load djmoney %}
+
+{% block head_title %}Binvenido a Chrono25{% endblock %}
+
+{% block page_content %}
+
+<div class="container">
+    {% include '_includes/_menssages.html' %}
+    <h1>Detalle Reloj</h1>
+    <article>
+    <div class="relojes-container">
+        <p><strong>Marca:</strong> {{ reloj.marca }}</p>
+        <p><strong>Modelo:</strong> {{ reloj.modelo }}</p>
+        {% if reloj.image %}
+            <img src="{{ reloj.image.url }}" alt="{{ reloj.nombre }}" width="200">
+        {% endif %}
+        <p><strong>Descripción:</strong> {{ reloj.description }}</p>
+        <p><strong>Precio:</strong> {{ reloj.price }}</p>
+        <p><strong>Vendedor:</strong> {{ reloj.user }}</p>
+        <p class="text-center mt-2 mb-2">
+            <a type="button" class="btn btn-primary btn-sm" href="{% url 'reloj_detail' reloj.pk %}">Añadir Carrito</a>
+        </p>
+        <hr class="hr">
+    </div>
+</article>
+
+{% endblock %}
