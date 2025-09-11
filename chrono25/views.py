@@ -80,6 +80,12 @@ class ProfileUpdateView(UpdateView):
     context_object_name = 'profile'
     fields = ['pais', 'profile_picture']
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.pk != self.get_object().user.pk:
+            messages.add_message(request, messages.ERROR, 'No tienes permiso para editar este perfil.')
+            return HttpResponseRedirect(reverse_lazy('home'))
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         user = form.save()
         messages.add_message(self.request, messages.SUCCESS, "Perfil actualizado correctamente.")

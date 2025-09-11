@@ -16,9 +16,20 @@
     {% else %}
         <p>No has subido una fotografía de perfil.</p>
     {% endif %}
-
-    <p><a href="{% url 'profile_update' profile.pk %}">Editar</a></p>
-
+    {% if profile.user == request.user %}
+        <p><a href="{% url 'profile_update' profile.pk %}">Editar</a></p>
+    {% endif %}
 </div>
+<div class="container">
+    <h2>Relojes en venta</h2>
+    <div class="row">
+        {% for reloj in profile.user.reloj.all %}
+            <div class="col-12 col-sm-6 col-md-4">
+                {% include '_includes/reloj/_reloj.html' %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 {% endblock %}

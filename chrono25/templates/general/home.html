@@ -10,12 +10,13 @@
     {% include '_includes/_menssages.html' %}
     <h1>Homepage</h1>
     <p>¡Bienvenido a Chrono25</p>
-    {% for reloj in page_obj %}
-    
-        {% include '_includes/reloj/_reloj.html' %}
-
-    {% endfor %}
-    
+    <div class="row">
+        {% for reloj in page_obj %}
+            <div class="col-12 col-sm-6 col-md-4">
+                {% include '_includes/reloj/_reloj.html' %}
+            </div>
+        {% endfor %}
+    </div>
 
     <div class="pagination">
         <span class="step-links">
