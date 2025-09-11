@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 
     'profiles',
     'reloj',
+    'order',
+    'orderItem',
 ]
 
 MIDDLEWARE = [
