@@ -30,6 +30,10 @@ class HomeView(ListView):
     context_object_name = 'relojes' # Nombre para acceder a la lista en la plantilla
     paginate_by = 10 # Número de elementos por página
 
+    def get_queryset(self):
+        # Devuelve solo los relojes que no se han vendido
+        return Reloj.objects.filter(vendido=False)
+
 
 class LoginView(FormView):
     template_name = 'general/login.html'
@@ -110,39 +114,38 @@ class CarritoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        carrito = self.request.session.get('carrito', {})
+        
+        # El objeto 'request' se accede a través de self.request en TemplateView
+        carrito_ids = self.request.session.get('carrito', [])
+        
         items_carrito = []
         total_carrito = Decimal('0.00')
 
-        for reloj_id, cantidad in carrito.items():
-            try:
-                reloj = get_object_or_404(Reloj, pk=reloj_id)
-                subtotal = reloj.price * cantidad
-                total_carrito += subtotal
-                items_carrito.append({
-                    'reloj': reloj,
-                    'cantidad': cantidad,
-                    'subtotal': subtotal
-                })
-            except ValueError:
-                # Manejar el caso donde reloj_id no es un entero válido
-                continue
-
+        for reloj_id in carrito_ids:
+            reloj = get_object_or_404(Reloj, pk=reloj_id)
+            subtotal = reloj.price
+            total_carrito += subtotal
+            items_carrito.append({
+                'reloj': reloj,
+                'subtotal': subtotal
+            })
+        
         context['items_carrito'] = items_carrito
         context['total_carrito'] = total_carrito
+        
         return context
 
 
 class AgregarAlCarritoView(View):
     def post(self, request, reloj_id, *args, **kwargs):
-        reloj = get_object_or_404(Reloj, pk=reloj_id)
-        carrito = request.session.get('carrito', {})
+        carrito = request.session.get('carrito', [])
+
+        if not isinstance(carrito, list):
+            carrito = []
         
-        reloj_id_str = str(reloj.id)
-        if reloj_id_str in carrito:
-            carrito[reloj_id_str] += 1
-        else:
-            carrito[reloj_id_str] = 1
+        # Solo agregamos el reloj si no está ya en el carrito
+        if reloj_id not in carrito:
+            carrito.append(reloj_id)
         
         request.session['carrito'] = carrito
         return redirect('ver_carrito_cbv')
@@ -151,19 +154,20 @@ class AgregarAlCarritoView(View):
 
 class EliminarDelCarritoView(View):
     def post(self, request, reloj_id, *args, **kwargs):
-        carrito = request.session.get('carrito', {})
-        reloj_id_str = str(reloj_id)
-        if reloj_id_str in carrito:
-            del carrito[reloj_id_str]
-            request.session['carrito'] = carrito
+        carrito = request.session.get('carrito', [])
+        
+        if reloj_id in carrito:
+            carrito.remove(reloj_id)
+        
+        request.session['carrito'] = carrito
         return redirect('ver_carrito_cbv')
 
 
 
 class CrearOrdenCompraView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        carrito = request.session.get('carrito', {})
-        if not carrito:
+        carrito_ids = request.session.get('carrito', [])
+        if not carrito_ids:
             return redirect('ver_carrito_cbv')
 
         # Crear la Orden de Compra
@@ -172,16 +176,22 @@ class CrearOrdenCompraView(LoginRequiredMixin, View):
             completada=True
         )
 
-        # Crear los Ítems de la Orden
-        for reloj_id, cantidad in carrito.items():
+        # Crear los ítems de la orden y marcar los relojes como vendidos
+        for reloj_id in carrito_ids:
             reloj = get_object_or_404(Reloj, pk=reloj_id)
-            ItemDeOrden.objects.create(
-                orden=orden,
-                reloj=reloj,
-                cantidad=cantidad
-            )
-        
-        # Limpiar el carrito de la sesión
-        request.session['carrito'] = {}
+            
+            # Solo si el reloj no ha sido vendido por otro cliente
+            if not reloj.vendido:
+                ItemDeOrden.objects.create(
+                    orden=orden,
+                    reloj=reloj,
+                )
+                
+                # Marcar el reloj como vendido para que "desaparezca"
+                reloj.vendido = True
+                reloj.save()
 
-        return render(request, 'orden_creada.html', {'orden': orden})
+        # Limpiar el carrito de la sesión
+        request.session['carrito'] = []
+
+        return render(request, 'carrito/orden_creada.html', {'orden': orden})

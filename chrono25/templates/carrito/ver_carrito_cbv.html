@@ -1,33 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Carrito de Compras</title>
-</head>
-<body>
+{% extends 'general/layout.html' %}
+
+{% load crispy_forms_tags %}
+
+{% load djmoney %}
+
+{% block head_title %}Binvenido a Chrono25{% endblock %}
+
+{% block page_content %}
+
+<div class="container">
+    {% include '_includes/_menssages.html' %}
     <h1>Tu Carrito</h1>
-    
     {% if items_carrito %}
         <ul>
-        {% for item in items_carrito %}
-            <li>
-                {{ item.reloj.marca }} {{item.reloj.modelo}} - Cantidad: {{ item.cantidad }} - Subtotal: {{ item.subtotal }}
-                <form method="post" action="{% url 'eliminar_del_carrito' item.reloj.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary btn-sm">Eliminar</button>
-                </form>
-            </li>
-        {% endfor %}
+            {% for item in items_carrito %}
+                <li>
+                    {{ item.reloj.marca }} {{item.reloj.modelo}} - Subtotal: {{ item.subtotal }}
+                    <form method="post" action="{% url 'eliminar_del_carrito' item.reloj.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">Eliminar</button>
+                    </form>
+                </li>
+            {% endfor %}
         </ul>
         <p><strong>Total de la compra: {{ total_carrito }}</strong></p>
         
         <form method="post" action="{% url 'orden_creada' %}">
             {% csrf_token %}
-            <button type="submit">Finalizar Compra</button>
+            <button type="submit" class="btn btn-primary btn-sm">Finalizar Compra</button>
         </form>
     {% else %}
         <p>Tu carrito está vacío.</p>
     {% endif %}
     
     <a href="{% url 'home' %}">Continuar comprando</a>
-</body>
-</html>
+</div>
+
+{% endblock %}
