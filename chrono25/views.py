@@ -117,7 +117,7 @@ class CarritoView(TemplateView):
         for reloj_id, cantidad in carrito.items():
             try:
                 reloj = get_object_or_404(Reloj, pk=reloj_id)
-                subtotal = reloj.precio * cantidad
+                subtotal = reloj.price * cantidad
                 total_carrito += subtotal
                 items_carrito.append({
                     'reloj': reloj,

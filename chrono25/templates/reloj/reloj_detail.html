@@ -21,9 +21,11 @@
         <p><strong>Descripción:</strong> {{ reloj.description }}</p>
         <p><strong>Precio:</strong> {{ reloj.price }}</p>
         <p><strong>Vendedor:</strong> {{ reloj.user }}</p>
-        <p class="text-center mt-2 mb-2">
-            <a type="button" class="btn btn-primary btn-sm" href="{% url 'reloj_detail' reloj.pk %}">Añadir Carrito</a>
-        </p>
+        <form method="post" action="{% url 'agregar_al_carrito' reloj.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">Agregar al Carrito</button>
+        </form>
+        <p><a href="{% url 'ver_carrito_cbv' %}">Ver Carrito</a></p>
         <hr class="hr">
     </div>
 </article>
