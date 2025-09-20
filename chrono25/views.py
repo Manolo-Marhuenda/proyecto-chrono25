@@ -10,8 +10,10 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from profiles.models import UserProfile
 from django.views.generic import ListView
+from django.conf import settings
+from django.core.mail import send_mail
 from reloj.models import Reloj
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, ContactoForm
 from django.views.generic.edit import FormView
 from django.views.generic import DetailView, UpdateView
 from django.contrib.auth import authenticate, login, logout
@@ -67,8 +69,37 @@ class RegisterView(CreateView):
     
 
 
-class ContactView(TemplateView):
-    template_name = 'general/contact.html'
+def contacto(request):
+    if request.method == "POST":
+        form = ContactoForm(request.POST)
+        if form.is_valid():
+            # Aquí va la lógica para procesar el formulario
+             # Obtener los datos del formulario
+            nombre = form.cleaned_data['nombre']
+            correo = form.cleaned_data['correo']
+            mensaje = form.cleaned_data['mensaje']
+
+            # Construir el asunto y el cuerpo del correo
+            asunto = f'Mensaje de contacto de {nombre}'
+            cuerpo = f'De: {nombre} <{correo}>\n\n{mensaje}'
+            
+            # Dirección de correo a la que se enviará el mensaje
+            destinatario = settings.EMAIL_HOST_USER # O cualquier otra dirección
+
+            # Enviar el correo
+            send_mail(
+                asunto,
+                cuerpo,
+                settings.EMAIL_HOST_USER, # Remitente
+                [destinatario], # Lista de destinatarios
+                fail_silently=False,
+            )
+            messages.add_message(request, messages.SUCCESS, "Email enviado correctamente.")
+            return HttpResponseRedirect(reverse_lazy('home'))  # Redirige a una página de éxito
+    else:
+        form = ContactoForm()
+    
+    return render(request, "general/contact.html", {"form": form})
 
 
 class LegaltView(TemplateView):

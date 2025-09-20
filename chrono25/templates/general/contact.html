@@ -6,8 +6,26 @@
 
 <div class="container">
     {% include '_includes/_menssages.html' %}
-    <h1>Contacto</h1>
-    <p>¡Bienvenido a Chrono25</p>
+    <form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="{{ form.nombre.id_for_label }}">Tu nombre:</label>
+        {{ form.nombre }}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.correo.id_for_label }}">Tu correo electrónico:</label>
+        {{ form.correo }}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.mensaje.id_for_label }}">Tu mensaje:</label>
+        <br>
+        {{form.mensaje}}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+</form>
 </div>
 
 {% endblock %}
