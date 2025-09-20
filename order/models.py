@@ -15,7 +15,7 @@ class OrdenDeCompra(models.Model):
     fecha_orden = models.DateTimeField(auto_now_add=True)
     completada = models.BooleanField(default=False)
     direccion_envio = models.CharField(max_length=255, blank=True, null=True)
-    metodo_pago = models.CharField(max_length=20,choices=METODOS_PAGO_CHOICES,default='contado',)
+    metodo_pago = models.CharField(max_length=20,choices=METODOS_PAGO_CHOICES,)
     
 
     def get_total_orden(self):

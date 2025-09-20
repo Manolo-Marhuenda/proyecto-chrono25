@@ -27,7 +27,7 @@
         
         <form method="post" action="{% url 'orden_creada' %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary btn-sm">Finalizar Compra</button>
+            <button type="submit" class="btn btn-primary btn-sm">Finalizar compra</button>
         </form>
     {% else %}
         <p>Tu carrito está vacío.</p>

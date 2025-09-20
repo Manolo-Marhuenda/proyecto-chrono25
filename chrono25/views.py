@@ -204,7 +204,7 @@ class CrearOrdenCompraView(LoginRequiredMixin, View):
         # Crear la Orden de Compra
         orden = OrdenDeCompra.objects.create(
             cliente=request.user,
-            completada=True
+            completada=True,
         )
 
         # Crear los ítems de la orden y marcar los relojes como vendidos
