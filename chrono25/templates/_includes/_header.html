@@ -10,10 +10,12 @@
                 {% endif %}
                 <li><a href="{% url 'contact' %}">Contacto</a></li>
                 {% if request.user.is_authenticated %}
-                <li><a href="{% url 'profile_detail' request.user.profile.pk %}">Mi perfil</a></li>
-                <li><a href="{% url 'reloj_create'  %}">Nuevo Reloj</a></li>
-                <li><a href="{% url 'ver_carrito_cbv' %}">Carrito</a></li>
-                <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
+                    {% if request.user.profile %}
+                        <li><a href="{% url 'profile_detail' request.user.profile.pk %}">Mi perfil</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'reloj_create'  %}">Nuevo Reloj</a></li>
+                    <li><a href="{% url 'ver_carrito_cbv' %}">Carrito</a></li>
+                    <li><a href="{% url 'logout' %}">Cerrar sesion</a></li>
                 {% endif %}
             </ul>
         </nav>
