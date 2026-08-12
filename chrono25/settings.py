@@ -46,10 +46,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'djmoney',
 
-    'profiles',
-    'reloj',
-    'order',
-    'orderItem',
 ]
 
 MIDDLEWARE = [
