@@ -7,3 +7,4 @@ from .models import UserProfile
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'valoracion')
     list_filter = ('valoracion',)
+    
