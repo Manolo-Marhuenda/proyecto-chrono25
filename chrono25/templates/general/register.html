@@ -1,13 +1,25 @@
 {% extends 'general/layout.html' %}
+{% load crispy_forms_tags %}
 
 {% block head_title %}Pagina Register{% endblock %}
 
 
 {% block page_content %}
+{% include '_includes/_messages.html' %}
 
     <div class="container">
-        <h1>Registro</h1>
-        <p>Esta es la página de registro de la aplicación.</p>
+        <h1>Registrate</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.username|as_crispy_field }}
+                    {{ form.email|as_crispy_field }}
+                    {{ form.password|as_crispy_field }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+        </form>
     </div>
 
 {% endblock %}
