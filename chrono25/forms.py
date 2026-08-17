@@ -13,6 +13,9 @@ class RegistrationForm(ModelForm):
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
+            # despues de guardar el usuario, se crea un perfil de usuario asociado a ese usuario.
+            from profiles.models import UserProfile
+            UserProfile.objects.create(user=user)  
         return user
 
 

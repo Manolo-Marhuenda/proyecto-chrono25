@@ -1,11 +1,13 @@
 from django.forms import forms
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import CreateView, FormView
 from .forms import RegistrationForm, LoginForm
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib import messages
+
+from profiles.models import UserProfile
 
 
 from django.contrib.auth import authenticate, login, logout
@@ -54,6 +56,11 @@ class Legalview(TemplateView):
 
 class Contactview(TemplateView):
     template_name = 'general/contacto.html'
+
+
+class ProfileDetailView(DetailView):
+    model = UserProfile
+    template_name = 'general/profile_detail.html'
 
 
 def logout_view(request):

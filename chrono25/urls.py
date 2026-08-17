@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import Homeview, loginview, registerview, Legalview, Contactview, logout_view
+from .views import ProfileDetailView
 
 
 urlpatterns = [
@@ -27,6 +28,7 @@ urlpatterns = [
     path('login/', loginview.as_view(), name='login'),
     path('logout/', logout_view, name='logout'),
     path('register/', registerview.as_view(), name='register'),
+    path('profile/<pk>/', ProfileDetailView.as_view(), name='profile_detail'),
     path('legal/', Legalview.as_view(), name='legal'),
     path('contact/', Contactview.as_view(), name='contact'),
     path('admin/', admin.site.urls),
