@@ -8,7 +8,14 @@
 
     <div class="container">
         <h1>Bienvenido a Chrono25</h1>
-        <p>Esta es la página de perfil del usuario.</p>
+        <p>Usuario: {{ profile.user }}</p>
+        {% if profile.photo %}
+            <img src="{{ profile.photo.url }}" alt="Imagen de perfil" width="200">
+        {% else %}
+            <p>No hay imagen de perfil disponible.</p>
+        {% endif %}
+        <p>Biografía: {{ profile.biography|default:"No hay biografía disponible." }}</p>
+        <p><a href="{% url 'profile_update' profile.pk %}">Editar perfil</a></p>
     </div>
 
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'general/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}Pagina Home{% endblock %}
+
+
+{% block page_content %}
+{% include '_includes/_messages.html' %}
+
+    <div class="container">
+        <h1>Editar Perfil</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.biography|as_crispy_field }}
+                    {{ form.photo|as_crispy_field }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
+        </form>
+    </div>
+
+{% endblock %}

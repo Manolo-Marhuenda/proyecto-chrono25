@@ -1,6 +1,6 @@
 from django.forms import forms
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, UpdateView
 from django.views.generic.edit import CreateView, FormView
 from .forms import RegistrationForm, LoginForm
 from django.urls import reverse_lazy
@@ -61,6 +61,24 @@ class Contactview(TemplateView):
 class ProfileDetailView(DetailView):
     model = UserProfile
     template_name = 'general/profile_detail.html'
+    context_object_name = 'profile'
+
+
+class ProfileUpdateView(UpdateView):
+    model = UserProfile
+    template_name = 'general/profile_update.html'
+    fields = ['photo', 'biography']
+    success_url = reverse_lazy('profile_detail')  # Redirige a la página de detalle del perfil después de la actualización
+
+    def form_valid(self, form):
+        # Asignar el usuario actual al perfil antes de guardar
+        messages.add_message(self.request, messages.SUCCESS, 'Perfil actualizado con éxito.')
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    def get_success_url(self):
+        # Redirige a la página de detalle del perfil después de la actualización
+        return reverse_lazy('profile_detail', kwargs={'pk': self.object.pk})
+
 
 
 def logout_view(request):
