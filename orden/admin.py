@@ -2,8 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from orden.models import Order
-from ordenitem.models import OrderItem 
+from orden.models import Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem

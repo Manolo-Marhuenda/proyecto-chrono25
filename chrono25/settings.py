@@ -49,7 +49,6 @@ INSTALLED_APPS = [
 
     'category',
     'orden',
-    'ordenitem',
     'profiles',
     'product',
 
