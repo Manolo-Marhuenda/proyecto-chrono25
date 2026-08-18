@@ -8,7 +8,16 @@
 
     <div class="container">
         <h1>Bienvenido a Chrono25</h1>
-        <p>Esta es la página de inicio de la aplicación.</p>
+        <section>
+            <h2>Relojes en venta</h2>
+            <div class="row">
+                {% for product in products %}
+                    {% include '_includes/product/_product.html' %}
+                {% empty %}
+                <p>No hay relojes en venta actualmente.</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 
 {% endblock %}

@@ -6,8 +6,11 @@ from .forms import RegistrationForm, LoginForm
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from profiles.models import UserProfile
+from product.models import Product
 
 
 from django.contrib.auth import authenticate, login, logout
@@ -17,6 +20,12 @@ from django.contrib.auth import authenticate, login, logout
 
 class Homeview(TemplateView):
     template_name = 'general/home.html' 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Aquí agregamos los relojes en venta al contexto para que estén disponibles en la plantilla
+        context['products'] = Product.objects.all()
+        return context
 
 
 class loginview(FormView):
@@ -57,13 +66,13 @@ class Legalview(TemplateView):
 class Contactview(TemplateView):
     template_name = 'general/contacto.html'
 
-
+@method_decorator(login_required, name='dispatch')
 class ProfileDetailView(DetailView):
     model = UserProfile
     template_name = 'general/profile_detail.html'
     context_object_name = 'profile'
 
-
+@method_decorator(login_required, name='dispatch')
 class ProfileUpdateView(UpdateView):
     model = UserProfile
     template_name = 'general/profile_update.html'

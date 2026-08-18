@@ -18,4 +18,15 @@
         <p><a href="{% url 'profile_update' profile.pk %}">Editar perfil</a></p>
     </div>
 
+    <section>
+        <h2>Relojes en venta</h2>
+        <div class="row">
+            {% for product in profile.user.relojes.all %}
+                {% include '_includes/product/_product.html' %}
+            {% empty %}
+            <p>No hay relojes en venta actualmente.</p>
+            {% endfor %}
+        </div>
+    </section>
+
 {% endblock %}

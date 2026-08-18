@@ -19,6 +19,8 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from product.views import CreateProductView
+
 from .views import Homeview, loginview, registerview, Legalview, Contactview, logout_view
 from .views import ProfileDetailView, ProfileUpdateView
 
@@ -30,6 +32,7 @@ urlpatterns = [
     path('register/', registerview.as_view(), name='register'),
     path('profile/<pk>/', ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/<pk>/', ProfileUpdateView.as_view(), name='profile_update'),
+    path('product/create/', CreateProductView.as_view(), name='create_product'),
     path('legal/', Legalview.as_view(), name='legal'),
     path('contact/', Contactview.as_view(), name='contact'),
     path('admin/', admin.site.urls),

@@ -1,0 +1,27 @@
+{% extends 'general/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}Nuevo Reloj{% endblock %}
+
+
+{% block page_content %}
+{% include '_includes/_messages.html' %}
+
+    <div class="container">
+        <h1>Vende tu reloj</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.marca|as_crispy_field }}
+                    {{ form.category|as_crispy_field }}
+                    {{ form.description|as_crispy_field }}
+                    {{ form.price|as_crispy_field }}
+                    {{ form.image|as_crispy_field }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Poner a la venta</button>
+        </form>
+    </div>
+
+{% endblock %}
