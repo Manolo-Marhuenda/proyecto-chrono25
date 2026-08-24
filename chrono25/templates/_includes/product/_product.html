@@ -1,12 +1,26 @@
-<div class="col-md-4">
-    <div class="card mb-4 shadow-sm">
-        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.marca }}">
-        <div class="card-body">
+<div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="ratio ratio-4x3">
+                <img src="{{ product.image.url }}" class="card-img-top object-fit-cover" alt="{{ product.marca }}">
+        </div>
+
+        <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.marca }}</h5>
-            <p class="card-text">{{ product.category|truncatewords:20 }}</p>
-            <p class="card-text">{{ product.description|truncatewords:20 }}</p>
-            <p class="card-text"><strong>Precio:</strong> ${{ product.price }}</p>
-            <p class="card-text"><strong>Vendedor:</strong> {{ product.vendedor }}</p>
+            <p class="card-text text-muted small">{{ product.category|truncatewords:5 }}</p>
+            <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+            <div class="mt-auto pt-2">
+                <p class="card-text mb-1"><strong>Precio:</strong> ${{ product.price }}</p>
+                <p class="card-text text-secondary small"><strong>Vendedor:</strong> {{ product.vendedor }}</p>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'agregar_al_carrito' product.id %}" method="post">
+                        {% csrf_token %} 
+    
+                        <button type="submit" class="btn btn-primary">
+                            Añadir al Carrito
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

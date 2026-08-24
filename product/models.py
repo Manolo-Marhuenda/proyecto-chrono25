@@ -17,6 +17,7 @@ class Product(models.Model):
     # Añadimos catregoria como un campo de clave foránea que se relaciona con el modelo Category. 
     #un reloj solo tiene un acategoria, pero una categoria puede tener muchos relojes.
     category = models.ForeignKey('category.Category',on_delete=models.PROTECT)
+    is_sold = models.BooleanField(default=False, verbose_name="Vendido")
 
     def __str__(self):
         return f"{self.vendedor.username} - {self.marca} - {self.category.nombre} - {self.price}€"

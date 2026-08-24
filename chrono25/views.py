@@ -2,6 +2,8 @@ from django.forms import forms
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, DetailView, UpdateView
 from django.views.generic.edit import CreateView, FormView
+
+
 from .forms import RegistrationForm, LoginForm
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -24,7 +26,7 @@ class Homeview(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí agregamos los relojes en venta al contexto para que estén disponibles en la plantilla
-        context['products'] = Product.objects.all()
+        context['products'] = Product.objects.filter(is_sold=False) # Filtramos solo los productos que no han sido vendidoss
         return context
 
 
@@ -79,11 +81,22 @@ class ProfileUpdateView(UpdateView):
     fields = ['photo', 'biography']
     success_url = reverse_lazy('profile_detail')  # Redirige a la página de detalle del perfil después de la actualización
 
+
+    def dispatch(self, request, *args, **kwargs):
+        # Asegúrate de que el usuario solo pueda editar su propio perfil
+        profile = self.get_object()
+        if profile.user != request.user:
+            messages.add_message(request, messages.ERROR, 'No tienes permiso para editar este perfil.')
+            return HttpResponseRedirect(reverse_lazy('home'))
+        return super().dispatch(request, *args, **kwargs)
+    
+
     def form_valid(self, form):
         # Asignar el usuario actual al perfil antes de guardar
         messages.add_message(self.request, messages.SUCCESS, 'Perfil actualizado con éxito.')
         form.instance.user = self.request.user
         return super().form_valid(form)
+
     def get_success_url(self):
         # Redirige a la página de detalle del perfil después de la actualización
         return reverse_lazy('profile_detail', kwargs={'pk': self.object.pk})

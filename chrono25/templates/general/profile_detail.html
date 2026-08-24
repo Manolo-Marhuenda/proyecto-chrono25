@@ -15,7 +15,9 @@
             <p>No hay imagen de perfil disponible.</p>
         {% endif %}
         <p>Biografía: {{ profile.biography|default:"No hay biografía disponible." }}</p>
-        <p><a href="{% url 'profile_update' profile.pk %}">Editar perfil</a></p>
+        {% if profile.user == request.user %}
+            <p><a href="{% url 'profile_update' profile.pk %}">Editar perfil</a></p>
+        {% endif %}
     </div>
 
     <section>
