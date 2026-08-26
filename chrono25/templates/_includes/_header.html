@@ -12,6 +12,9 @@
                 <li><a href="{% url 'profile_detail' request.user.profile.pk %}">Perfil</a></li>
                 <li><a href="{% url 'create_product' %}">Vender Reloj</a></li>
                 <li><a href="{% url 'ver_carrito' %}">Carrito</a></li>
+                    {% if user.ordenes.exists %}
+                        <li><a href="{% url 'order_list' %}">Mis Pedidos</a></li>
+                    {% endif %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% endif %}
                 <li><a href="{% url 'contact' %}">Contact</a></li>

@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from product.views import CreateProductView
-from orden.views import CheckoutView, VerCarritoView, AgregarAlCarritoView, EliminarDelCarritoView
+from orden.views import CheckoutView, VerCarritoView, AgregarAlCarritoView, EliminarDelCarritoView, OrderListView, ValorarOrdenView
 
 from .views import Homeview, loginview, registerview, Legalview, Contactview, logout_view
 from .views import ProfileDetailView, ProfileUpdateView
@@ -37,6 +37,8 @@ urlpatterns = [
     path('carrito/', VerCarritoView.as_view(), name='ver_carrito'),
     path('agregar-al-carrito/<int:reloj_id>/', AgregarAlCarritoView.as_view(), name='agregar_al_carrito'),
     path('carrito/eliminar/<int:reloj_id>/', EliminarDelCarritoView.as_view(), name='eliminar_del_carrito'),
+    path('ordenes/', OrderListView.as_view(), name='order_list'),
+    path('ordenes/<int:order_id>/valorar/', ValorarOrdenView.as_view(), name='valorar_orden'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('legal/', Legalview.as_view(), name='legal'),
     path('contact/', Contactview.as_view(), name='contact'),

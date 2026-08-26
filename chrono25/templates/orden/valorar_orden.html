@@ -1,0 +1,36 @@
+{% extends 'general/layout.html' %}
+
+{% block head_title %}Carrito de Compras{% endblock %}
+
+
+{% block page_content %}
+{% include '_includes/_messages.html' %}
+
+<div class="container py-4" style="max-width: 600px;">
+  <div class="card shadow-sm p-4">
+    <h3>Valorar compra del Pedido #{{ order.id }}</h3>
+    <p class="text-muted">Vendedor: <strong>{{ vendedor.username }}</strong></p>
+    <hr>
+
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="id_puntuacion" class="form-label fw-bold">Puntuación</label>
+        {{ form.puntuacion }}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_comentario" class="form-label fw-bold">Comentario (opcional)</label>
+        {{ form.comentario }}
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'order_list' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-success">Guardar valoración</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

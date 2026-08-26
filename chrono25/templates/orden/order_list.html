@@ -1,0 +1,51 @@
+{% extends 'general/layout.html' %}
+
+{% block head_title %}Carrito de Compras{% endblock %}
+
+
+{% block page_content %}
+{% include '_includes/_messages.html' %}
+<div class="container py-4">
+  <h2 class="mb-4">Mis Compras</h2>
+
+  {% for order in ordenes %}
+    <div class="card mb-3 shadow-sm">
+      <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Pedido #{{ order.id }}</strong>
+          <span class="text-muted ms-2">{{ order.created_at|date:"d/m/Y" }}</span>
+        </div>
+        <span class="badge bg-success">Completado</span>
+      </div>
+
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            {% for item in order.items.all %}
+              <div class="d-flex align-items-center mb-2">
+                <div class="ms-2">
+                  <h6 class="mb-0">{{ item.product.marca }}</h6>
+                  <small class="text-muted">Vendedor: {{ item.product.vendedor.username }}</small>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="col-md-4 text-end">
+            {% if order.valoraciones.all %}
+              <span class="btn btn-sm btn-outline-secondary disabled">
+                ✓ Valoración enviada
+              </span>
+            {% else %}
+              <a href="{% url 'valorar_orden' order.id %}" class="btn btn-sm btn-warning">
+                ★ Valorar vendedor
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+    
+{% endblock %}

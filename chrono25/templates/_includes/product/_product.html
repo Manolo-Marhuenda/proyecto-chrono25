@@ -10,7 +10,13 @@
             <p class="card-text">{{ product.description|truncatewords:15 }}</p>
             <div class="mt-auto pt-2">
                 <p class="card-text mb-1"><strong>Precio:</strong> ${{ product.price }}</p>
-                <p class="card-text text-secondary small"><strong>Vendedor:</strong> {{ product.vendedor }}</p>
+                <p class="card-text text-secondary small mb-2">
+                    <strong>Vendedor:</strong> {{ product.vendedor }}
+                    <span class="ms-1 text-warning fw-bold">
+                        ★ {{ product.vendedor.profile.rating_medio }}
+                    </span>
+                    <span class="text-muted">({{ product.vendedor.profile.total_valoraciones }})</span>
+                </p>
                 {% if user.is_authenticated %}
                     <form action="{% url 'agregar_al_carrito' product.id %}" method="post">
                         {% csrf_token %} 

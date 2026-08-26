@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView, View, CreateView
+from django.views.generic import TemplateView, View, CreateView, ListView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import ValoracionForm
+from .models import Valoracion
 
 from orden.models import Order, OrderItem
 from product.models import Product
@@ -111,3 +113,61 @@ class CheckoutView(LoginRequiredMixin, CreateView):
             messages.add_message(self.request, messages.SUCCESS, 'Pedido realizado con éxito.')
 
         return response
+
+
+class OrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'orden/order_list.html'
+    context_object_name = 'ordenes'
+
+    def get_queryset(self):
+        # Filtramos las órdenes para que solo se muestren las del usuario actual
+        return Order.objects.filter(user=self.request.user).order_by('-created_at')
+
+
+class ValorarOrdenView(LoginRequiredMixin, CreateView):
+    model = Valoracion
+    form_class = ValoracionForm
+    template_name = 'orden/valorar_orden.html'
+    success_url = reverse_lazy('order_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.order = get_object_or_404(Order, pk=self.kwargs['order_id'])
+
+        # Validar que el pedido pertenezca al usuario conectado
+        if self.order.user != request.user:
+            messages.error(request, "No tienes permiso para acceder a este pedido.")
+            return redirect('order_list')
+
+        # Obtenemos el vendedor del primer reloj del pedido (o ajusta si hay múltiples)
+        primer_item = self.order.items.first()
+        self.vendedor = primer_item.product.vendedor if primer_item else None
+
+        if not self.vendedor:
+            messages.error(request, "No se encontró el vendedor asociado a este pedido.")
+            return redirect('order_list')
+
+        # Comprobar si ya existe valoración para esta orden y este vendedor
+        if Valoracion.objects.filter(order=self.order, vendedor=self.vendedor).exists():
+            messages.warning(request, "Ya has enviado una valoración para este pedido.")
+            return redirect('order_list')
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.order = self.order
+        form.instance.comprador = self.request.user
+        form.instance.vendedor = self.vendedor
+        # 1  Guardamos la instancia de la Valoración en la base de datos.
+        response = super().form_valid(form)
+        # 2. ACTUALIZAMOS EL USERPROFILE DEL VENDEDOR
+        # self.object contiene el objeto Valoracion recién guardado
+        self.vendedor.profile.agregar_valoracion(self.object.puntuacion)
+        messages.success(self.request, "¡Gracias! Tu valoración ha sido registrada.")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = self.order
+        context['vendedor'] = self.vendedor
+        return context
