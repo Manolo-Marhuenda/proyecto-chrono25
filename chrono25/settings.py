@@ -155,4 +155,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'manolommq@gmail.com'  # Cambia esto por tu correo
 EMAIL_HOST_PASSWORD = 'sypj gzpl nbbu gwbj'  # Cambia esto por tu contraseña o usa
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
