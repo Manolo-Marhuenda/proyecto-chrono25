@@ -19,7 +19,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from product.views import CreateProductView
+from product.views import CreateProductView, DetailProductView
 from orden.views import CheckoutView, VerCarritoView, AgregarAlCarritoView, EliminarDelCarritoView, OrderListView, ValorarOrdenView
 
 from .views import Homeview, loginview, registerview, Legalview, Contactview, logout_view
@@ -34,6 +34,7 @@ urlpatterns = [
     path('profile/<pk>/', ProfileDetailView.as_view(), name='profile_detail'),
     path('profile/update/<pk>/', ProfileUpdateView.as_view(), name='profile_update'),
     path('product/create/', CreateProductView.as_view(), name='create_product'),
+    path('product/<int:pk>/', DetailProductView.as_view(), name='detalle_producto'),
     path('carrito/', VerCarritoView.as_view(), name='ver_carrito'),
     path('agregar-al-carrito/<int:reloj_id>/', AgregarAlCarritoView.as_view(), name='agregar_al_carrito'),
     path('carrito/eliminar/<int:reloj_id>/', EliminarDelCarritoView.as_view(), name='eliminar_del_carrito'),

@@ -1,0 +1,74 @@
+{% extends 'general/layout.html' %}
+
+{% block head_title %}{{ product.marca }} {{ product.modelo }} - Detalle{% endblock %}
+
+{% block page_content %}
+{% include '_includes/_messages.html' %}
+
+<div class="container my-4" style="max-width: 900px;">
+    <!-- Botón para volver a la Home -->
+    <div class="mb-3">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm">
+            ← Volver al inicio
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="row g-0 align-items-center">
+            <!-- Imagen ajustada -->
+            <div class="col-md-5 text-center bg-light rounded-start p-3">
+                <img src="{{ product.image.url }}" 
+                     class="img-fluid rounded object-fit-contain" 
+                     alt="{{ product.marca }}"
+                     style="max-height: 380px; width: 100%;">
+            </div>
+
+            <!-- Información del producto -->
+            <div class="col-md-7">
+                <div class="card-body p-4">
+                    <h3 class="card-title fw-bold mb-1">{{ product.marca }}</h3>
+                    {% if product.modelo %}
+                        <h5 class="text-muted mb-2">{{ product.modelo }}</h5>
+                    {% endif %}
+
+                    {% if product.category %}
+                        <span class="badge bg-secondary mb-3">{{ product.category }}</span>
+                    {% endif %}
+
+                    <div class="my-2">
+                        <span class="fs-5 fw-bold me-4">{{ product.price }} €</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block fw-bold">Descripción:</small>
+                        <p class="card-text text-secondary mb-0">{{ product.description }}</p>
+                    </div>
+
+                    <!-- Datos del vendedor -->
+                    <div class="p-2 px-3 bg-light rounded mb-4">
+                        <small class="text-secondary">
+                            <strong>Vendedor:</strong> {{ product.vendedor }}
+                            <span class="ms-1 text-warning fw-bold">★ {{ product.vendedor.profile.rating_medio }}</span>
+                            <span class="text-muted">({{ product.vendedor.profile.total_valoraciones }})</span>
+                        </small>
+                    </div>
+
+                    <!-- Botón Añadir al Carrito -->
+                    <div>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'agregar_al_carrito' product.id %}" method="post">
+                                {% csrf_token %} 
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Añadir al Carrito
+                                </button>
+                            </form>
+                        {% else %}
+                            <p class="text-muted small mb-0">Inicia sesión para poder comprar este reloj.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

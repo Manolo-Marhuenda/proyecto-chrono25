@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django.urls import reverse_lazy
 from .models import Product
 from .forms import ProductForm
@@ -20,3 +20,10 @@ class CreateProductView(CreateView):
         form.instance.vendedor = self.request.user
         messages.add_message(self.request, messages.SUCCESS, 'Reloj Puesto a la venta exitosamente. Ahora puedes verlo en tu perfil.')
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class DetailProductView(DetailView):
+    model = Product
+    template_name = '_includes/product/detalle_producto.html'
+    context_object_name = 'product'
